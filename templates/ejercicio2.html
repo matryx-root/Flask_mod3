@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario Ejercicio 2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="center">
+        <div class="formulario">
+            <h1>Formulario de Nombres</h1> 
+            <form method="POST" action="/procesar_ejercicio2">
+                <label>Nombre 1: <input type="text" name="nombre1"></label><br>
+                <label>Nombre 2: <input type="text" name="nombre2"></label><br>
+                <label>Nombre 3: <input type="text" name="nombre3"></label><br>
+                <input type="submit" value="Enviar">
+                <div id="resultadoEjercicio2">
+                    {% if resultado %}
+                        <h2>Resultado:</h2>
+                        <p>Nombre más largo: {{ resultado.nombre_mas_largo }}</p>
+                        <p>Longitud: {{ resultado.longitud_nombre }}</p>
+                    {% endif %}
+                </div>
+                <a href="/">Volver a la página de inicio</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formularioEjercicio2 = document.querySelector('form');
+            const resultadoEjercicio2 = document.getElementById('resultadoEjercicio2');
+
+            formularioEjercicio2.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(formularioEjercicio2);
+                fetch('/procesar_ejercicio2', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultadoEjercicio2.innerHTML = `<h2>Resultado:</h2>
+                        <p>Nombre más largo: ${data.nombre_mas_largo}</p>
+                        <p>Longitud: ${data.longitud_nombre}</p>`;
+                })
+                .catch(error => console.error(error));
+            });
+        });
+    </script>
+</body>
+</html>

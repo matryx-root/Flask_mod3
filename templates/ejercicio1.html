@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario Ejercicio 1</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="center">
+        <div class="formulario">
+            <h1>Formulario de Notas</h1> 
+
+            <form method="POST" action="/procesar_ejercicio1" id="formularioEjercicio1">
+
+                <label>Nota 1: <input type="number" name="nota1" min="10" max="70"></label><br>
+                <label>Nota 2: <input type="number" name="nota2" min="10" max="70"></label><br>
+                <label>Nota 3: <input type="number" name="nota3" min="10" max="70"></label><br>
+                <label>Asistencia (%): <input type="number" name="asistencia" min="0" max="100"></label><br>
+                <input type="submit" value="Enviar">
+                <div id="resultadoEjercicio1">
+                    {% if resultado %}
+                        <h2>Resultado:</h2>
+                        <p>Promedio de Notas: {{ resultado.promedio }}</p>
+                        <p>Estado: {{ resultado.estado }}</p>
+                    {% endif %}
+                </div>
+                <a href="/">Volver a la página de inicio</a>
+            </form>
+
+            
+        </div>
+        
+
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formularioEjercicio1 = document.getElementById('formularioEjercicio1');
+
+            const resultadoEjercicio1 = document.getElementById('resultadoEjercicio1');
+            
+            formularioEjercicio1.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(formularioEjercicio1);
+                fetch('/procesar_ejercicio1', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultadoEjercicio1.innerHTML = `<h2>Resultado:</h2>
+                        <p>Promedio de Notas: ${data.promedio}</p>
+                        <p>Estado: ${data.estado}</p>`;
+                })
+                .catch(error => console.error(error));
+            });
+        });
+    </script>
+    
+</body>
+</html>
